@@ -37,32 +37,11 @@ const MORSE_TABLE = {
     '-----':  '0',
 };
 
-function decode(expr) {
-
-    const letter = (e) => {
-        let res = ''
-        e.split('00').forEach(el => {
-            res += el!=='' ? el : '';
-        })
-        const morse_letter = res.replace(/10/gi,'.').replace(/11/gi,'-');
-        const ret = morse_letter !== '**********' ? MORSE_TABLE[morse_letter] : ' ' ;
-        return ret
-    }
-
-    let stack = '';
-    let str = ''
-    let count = 0
-
-    expr.split('').forEach(v => {
-    stack += v;
-    count += 1;
-    if (count%10 === 0) {
-        count = 0
-        str += letter(stack);
-        stack = ''
-    }
-})
-    return str
+const decode = (expr) => {
+    return expr.match(/.{1,10}/g).reduce((a,b) => {
+        a += b !== `**********` ? MORSE_TABLE[b.replace(/10/gi, '.').replace(/11/gi,'-').replace(/0+/g, '')] : ' '
+        return a
+    }, '')
 }
 
 module.exports = {
